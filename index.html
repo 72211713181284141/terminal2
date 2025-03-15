@@ -1,3 +1,5 @@
+<!-- IMPORTANT: THIS IS A CYBERSECURITY GAME FOR EDUCATIONAL PURPOSES ONLY! -->
+<!-- IMPORTANT: NO PERSONABLE IDENTIFIABLE INFORMATION IS BEING SAVED OR STORED -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -367,7 +369,7 @@
 
            
             } else if (command === "<script>potogold<a^100*z^100>") {
-                printToTerminal("system76@ubuntu1976: Decryption Critical Failure. Terminating Connection.");
+                printToTerminal("system76@ubuntu1976: Stacked Buffer Overload Error. Terminating Connection.");
                 
                 // Wait for 3 seconds before starting the rainbow effect
                 setTimeout(() => {
@@ -510,7 +512,7 @@ function startLogoutTimer(seconds) {
     const documentMap = {
         'admin': `
             <div class="document"><a href="#" onclick="downloadFiles()">DOWNLOAD ENTIRE DIRECTORY</a><div>
-            <
+            
         `,
         'subfolder1': `
             <div class="document"><a href="/MultiChapterDiagram.txt" download>ChapterMap</a></div>
@@ -645,7 +647,7 @@ input.addEventListener('input', function(event) {
                 <p><strong>system76@ubuntu1976:</strong> Intrusion Detection System Activated.</p>
                 <p>Forwarding Your System Information to Administrator Level 4...</p>
                 <hr>
-                <p><strong>System Information:</strong></p>
+                <p><strong>Your System Information:</strong></p>
                 <p>Device Type: ${deviceType}</p>
                 <p>RAM: ${memory}</p>
                 <p>CPU Cores: ${cpuCores}</p>
@@ -667,35 +669,54 @@ input.addEventListener('input', function(event) {
             </div>
         `;
 
-        // 🔴 **Turn Page Completely Black After 10 Seconds**
-        setTimeout(() => {
-            document.body.style.backgroundColor = "black";
-            document.body.innerHTML = "";
+// Prevent page refresh & navigation as early as possible
+window.addEventListener("beforeunload", function (event) {
+    event.preventDefault();
+    event.returnValue = ""; // Required for some browsers
+});
 
-            // Prevent page refresh & navigation
-            window.addEventListener("beforeunload", function (event) {
-                event.preventDefault();
-                event.returnValue = ""; // Required for some browsers
-            });
+// Block F5, Ctrl+R, and manual reload
+document.addEventListener("keydown", function (event) {
+    if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+});
 
-            // Block F5 (refresh), Ctrl+R, and right-click menu
-            document.addEventListener("keydown", function (event) {
-                if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
-                    event.preventDefault();
-                }
-            });
+// Disable right-click menu
+document.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+});
 
-            document.addEventListener("contextmenu", function (event) {
-                event.preventDefault();
-            });
+// Prevent Back Button (push multiple states to lock navigation)
+function blockBackButton() {
+    history.pushState(null, "", location.href);
+    history.pushState(null, "", location.href);
+}
+blockBackButton();
+window.addEventListener("popstate", blockBackButton);
 
-            // Prevent Back Button
-            history.pushState(null, "", location.href);
-            window.addEventListener("popstate", function () {
-                history.pushState(null, "", location.href);
-            });
+// **Aggressive Method to Fight Reload**
+setInterval(() => {
+    history.pushState(null, "", location.href); // Spam history
+    window.onbeforeunload = function () {
+        return "Reloading is disabled!";
+    };
+}, 100);
 
-        }, 1000); // 1 seconds delay before blackout
+// Detect visibility changes (to counter manual refresh attempts)
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+        document.body.innerHTML = "🔒 Page Lock Active";
+    }
+});
+
+// **Turn Page Black After 1 Second**
+setTimeout(() => {
+    document.body.style.backgroundColor = "black";
+    document.body.innerHTML = "";
+}, 1000);
+
     }
 </script>
 

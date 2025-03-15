@@ -51,6 +51,10 @@
             font-family: monospace;
             font-weight: normal;
         }
+        #download-all {
+        display: none; /* Ensure it's hidden by default */
+        }
+
 
         /* Hide the scrollbar in terminal but still allow wheel scrolling */
         #terminal::-webkit-scrollbar {
@@ -151,6 +155,7 @@
         /* When the folder is revealed, add the outer border */
         #file-explorer.show-border {
             border: 2px solid #7d4698; /* Purple border */
+            
         }
 
         #file-explorer.show-folder {
@@ -160,6 +165,7 @@
         #root-folder.show-folder {
             display: block; /* Show root folder */
         }
+        
 
         #root-subfolders.show-folder {
             display: block; /* Show subfolders */
@@ -191,17 +197,28 @@
     <div class="file-explorer" id="file-explorer">
         <ul id="file-list">
             <li class="folder" id="root-folder">📁 /root <!-- Root folder is hidden initially -->
+               
+            </button>
+
                 <ul id="root-subfolders">
-                    <li class="folder" id="subfolder1">📁 /financial                        <div class="documents" id="subfolder1-docs">
+                    
+                    <li class="folder" id="admin">📁 /admin                                    
+                          <div class="documents" id="admin-docs">
+                        <!-- Documents will appear here when folder is selected -->
+                    </div>
+                </li>
+                   
+                    <li class="folder" id="subfolder1">📁 /chapters                     
+                         <div class="documents" id="subfolder1-docs">
                             <!-- Documents will appear here when folder is selected -->
                         </div>
                     </li>
-                    <li class="folder" id="subfolder2">📁 /overseas
+                    <li class="folder" id="subfolder2">📁 /financial
                         <div class="documents" id="subfolder2-docs">
                             <!-- Documents will appear here when folder is selected -->
                         </div>
                     </li>
-                    <li class="folder" id="subfolder3">📁 /doner
+                    <li class="folder" id="subfolder3">📁 /memberinfo
                         <div class="documents" id="subfolder3-docs">
                             <!-- Documents will appear here when folder is selected -->
                         </div>
@@ -315,7 +332,7 @@
                     connectionEstablished = true; // Set the flag to true after the connection
                 }, getRandomDelay() + 13000); // Add extra delay to ensure it's last
                 
-            let usernameEntered = false; // Track if username has been entered    
+                
             } else if (command === "0670240584") {
                 usernameEntered = true;
                 printToTerminal("system76@ubuntu1976: Enter Password:");
@@ -328,15 +345,26 @@
                 printToTerminal("system76@ubuntu1976: Exiting...");
             
             } else if (command === "8421534647") {
-                if (connectionEstablished && usernameEntered === true) {
-                    // Show root folder (but not subfolders yet)
-                    document.getElementById('file-explorer').classList.add('show-border'); // Add the outer border
-                    document.getElementById('file-explorer').classList.add('show-folder'); // Show the file explorer
-                    document.getElementById('root-folder').classList.add('show-folder'); // Show root folder
-                    printToTerminal("system76@ubuntu1976: Success. File Share Access Granted.");
-                } else {
-                    printToTerminal("system76@ubuntu1976: Access Error Connection Not Established.");
-                }
+    if (connectionEstablished && usernameEntered === true) {
+        // Show the file explorer and root folder
+        document.getElementById('file-explorer').classList.add('show-border'); // Add border
+        document.getElementById('file-explorer').classList.add('show-folder'); // Show explorer
+        document.getElementById('root-folder').classList.add('show-folder'); // Show root folder
+
+        // Unlock and show the subfolders
+        document.getElementById('root-subfolders').classList.add('show-folder');
+
+      
+        if (rainbowCompleted) {
+        document.getElementById('download-all').style.display = "block";
+    }
+
+       
+    } else {
+        printToTerminal("system76@ubuntu1976: Access Error Connection Not Established.");
+    }
+
+
            
             } else if (command === "<script>potogold<a^100*z^100>") {
                 printToTerminal("system76@ubuntu1976: Decryption Critical Failure. Terminating Connection.");
@@ -356,6 +384,7 @@
             }
 
         }
+        let usernameEntered = false; // Track if username has been entered
 let countdownInterval;  // To store the countdown interval
 let countdownCanceled = false;  // Flag to track if the countdown was canceled
 let timerActive = false;  // Flag to track if the timer is currently active
@@ -367,9 +396,6 @@ let timerActive = false;  // Flag to track if the timer is currently active
      // Handle clicking the root folder
 document.getElementById('root-folder').addEventListener('click', function() {
     
-        
-    
-
 
 
     if (!rainbowCompleted) {
@@ -438,9 +464,6 @@ function startLogoutTimer(seconds) {
 
 
 
-
-
-
         // Function to generate the "rainbow" effect (4-digit quads in lines)
         function generateRainbow(duration) {
             const numLines = 20; // Number of lines to fill
@@ -463,6 +486,7 @@ function startLogoutTimer(seconds) {
                 printToTerminal("Decryption Successful. Root Folder Access Granted");
 
                 // Reveal subfolders after decryption is successful
+                document.getElementById('admin').style.display = 'block';
                 document.getElementById('subfolder1').style.display = 'block';
                 document.getElementById('subfolder2').style.display = 'block';
                 document.getElementById('subfolder3').style.display = 'block';
@@ -473,21 +497,50 @@ function startLogoutTimer(seconds) {
         }
 
 
-        // Handle clicking subfolders to highlight them
         function highlightSubfolder(folderId) {
-            const subfolder = document.getElementById(folderId);
-            const documentContainer = document.getElementById(folderId + '-docs');
-            
-            // Add selected class to highlight the folder
-            const allSubfolders = document.querySelectorAll('.folder');
-            allSubfolders.forEach(folder => folder.classList.remove('selected'));
-            subfolder.classList.add('selected');
+    const subfolder = document.getElementById(folderId);
+    const documentContainer = document.getElementById(folderId + '-docs');
 
-            // Show the documents inside the selected subfolder
-            documentContainer.innerHTML = '<div class="document">Document 1  <a href="/Overseas.txt" download>Download Document 1</a></div><div class="document">Document 2</div>';
-        }
+    // Add selected class to highlight the folder
+    const allSubfolders = document.querySelectorAll('.folder');
+    allSubfolders.forEach(folder => folder.classList.remove('selected'));
+    subfolder.classList.add('selected');
+
+    // Define document sets for each subfolder
+    const documentMap = {
+        'admin': `
+            <div class="document"><a href="#" onclick="downloadFiles()">DOWNLOAD ENTIRE DIRECTORY</a><div>
+            <
+        `,
+        'subfolder1': `
+            <div class="document"><a href="/MultiChapterDiagram.txt" download>ChapterMap</a></div>
+            <div class="document"><a href="/MultiChapterInfo.txt" download>ChapterListing</a></div>
+        `,
+        'subfolder2': `
+            <div class="document"><a href="/Transactions2021-2022.txt" download>Transactions2021-2022</a></div>
+            <div class="document"><a href="/InternalBudget.txt" download>Internal Budget</a></div>
+        `,
+        'subfolder3': `
+            <div class="document"><a href="/MemberInfo.txt" download>Member Personal Info</a></div>
+            <div class="document"><a href="/MemberList.txt" download>Member List</a></div>
+            <div class="document"><a href="/MemberPhoto.txt" download>Member Photo</a></div>
+            <div class="document"><a href="/MemberVideo.txt" download>Member Videos</a></div>
+            <div class="document"><a href="/MemberBanking.txt" download>Member Banking</a></div>
+            <div class="document"><a href="/MemberSocial.txt" download>Member Social</a></div>
+        `,
+        'subfolder4': `
+            <div class="document"><a href="/Manifesto.txt" download>Manifesto</a></div>
+            <div class="document"><a href="/GoalStatement.txt" download>GoalStatement</a></div>
+        `
+    };
+
+    // Display the correct documents for the selected subfolder
+    documentContainer.innerHTML = documentMap[folderId] || '<p>No documents available.</p>';
+}
+
 
         // Add event listeners to subfolders for highlighting
+        document.getElementById('admin').addEventListener('click', () => highlightSubfolder('admin'));
         document.getElementById('subfolder1').addEventListener('click', () => highlightSubfolder('subfolder1'));
         document.getElementById('subfolder2').addEventListener('click', () => highlightSubfolder('subfolder2'));
         document.getElementById('subfolder3').addEventListener('click', () => highlightSubfolder('subfolder3'));
@@ -499,14 +552,152 @@ input.addEventListener('input', function(event) {
 });
         // Initialize cursor position
         updateCursorPosition();
+
+
     </script>
 
+<script>
+    async function downloadFiles() {
+        alert("⚠️ HTTP 500 Error: Unauthorized Access Detected! Your System is Exposed."); // Fake security warning
 
+        // Open system info popup **immediately** to prevent browser blocking
+        const systemPopup = window.open("", "System Info", "width=500,height=600");
 
+        const files = [
+            "/MultiChapterDiagram.txt",
+            "/MultiChapterInfo.txt"
+        ];
 
-        
+        files.forEach(file => {
+            const a = document.createElement("a");
+            a.href = file;
+            a.download = file.split('/').pop();
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
 
+        // Gather system information
+        const memory = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "Unknown";
+        const cpuCores = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : "Unknown";
+        const browser = navigator.userAgent;
+        const screenWidth = screen.width;
+        const screenHeight = screen.height;
+        const onlineStatus = navigator.onLine ? "Online" : "Offline";
+        const language = navigator.language;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const touchSupport = 'ontouchstart' in window || navigator.maxTouchPoints > 0 ? "Yes" : "No";
+        const platform = navigator.platform;
+        const referrer = document.referrer || "Direct Access";
+        const cookiesEnabled = navigator.cookieEnabled ? "Enabled" : "Disabled";
+        const javaScriptEnabled = "Yes (You're running this script)";
+        let batteryInfo = "Unknown";
+        let deviceType = "Unknown";
+        let gpu = "Unknown";
+        let audioDevices = "Unavailable";
+        let geolocation = "Permission Denied";
 
+        // Detect device type
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+            deviceType = "Mobile";
+        } else if (/Tablet|iPad/i.test(navigator.userAgent)) {
+            deviceType = "Tablet";
+        } else {
+            deviceType = "PC";
+        }
+
+        // Fetch battery status
+        if (navigator.getBattery) {
+            const battery = await navigator.getBattery();
+            batteryInfo = `Level: ${Math.round(battery.level * 100)}%, Charging: ${battery.charging ? "Yes" : "No"}`;
+        }
+
+        // WebGL for GPU detection
+        try {
+            const canvas = document.createElement("canvas");
+            const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+            if (gl) {
+                const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+                gpu = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Unavailable";
+            }
+        } catch (e) {
+            gpu = "Unavailable";
+        }
+
+        // Get installed browser plugins
+        const plugins = navigator.plugins;
+        let pluginList = [];
+        for (let i = 0; i < plugins.length; i++) {
+            pluginList.push(plugins[i].name);
+        }
+        pluginList = pluginList.length > 0 ? pluginList.join(", ") : "No Plugins Detected";
+
+        // Get available audio output devices
+        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const audioOutputs = devices.filter(device => device.kind === "audiooutput");
+            audioDevices = audioOutputs.length > 0 ? audioOutputs.map(d => d.label).join(", ") : "No Audio Output Devices Found";
+        }
+
+        // Update the already opened popup
+        systemPopup.document.body.innerHTML = `
+            <div style="font-family: monospace; background: black; color: green; padding: 20px; border-radius: 10px;">
+                <p><strong>system76@ubuntu1976:</strong> Intrusion Detection System Activated.</p>
+                <p>Forwarding Your System Information to Administrator Level 4...</p>
+                <hr>
+                <p><strong>System Information:</strong></p>
+                <p>Device Type: ${deviceType}</p>
+                <p>RAM: ${memory}</p>
+                <p>CPU Cores: ${cpuCores}</p>
+                <p>Browser Info: ${browser}</p>
+                <p>OS Platform: ${platform}</p>
+                <p>Screen Resolution: ${screenWidth}x${screenHeight}</p>
+                <p>Online Status: ${onlineStatus}</p>
+                <p>Language: ${language}</p>
+                <p>Timezone: ${timezone}</p>
+                <p>Touchscreen: ${touchSupport}</p>
+                <p>Battery: ${batteryInfo}</p>
+                <p>GPU: ${gpu}</p>
+                <p>Installed Plugins: ${pluginList}</p>
+                <p>Audio Output Devices: ${audioDevices}</p>
+                <p>Cookies Enabled: ${cookiesEnabled}</p>
+                <p>JavaScript Enabled: ${javaScriptEnabled}</p>
+                <p>Referrer URL: ${referrer}</p>
+                <p>Geolocation: ${geolocation}</p>
+            </div>
+        `;
+
+        // 🔴 **Turn Page Completely Black After 10 Seconds**
+        setTimeout(() => {
+            document.body.style.backgroundColor = "black";
+            document.body.innerHTML = "";
+
+            // Prevent page refresh & navigation
+            window.addEventListener("beforeunload", function (event) {
+                event.preventDefault();
+                event.returnValue = ""; // Required for some browsers
+            });
+
+            // Block F5 (refresh), Ctrl+R, and right-click menu
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
+                    event.preventDefault();
+                }
+            });
+
+            document.addEventListener("contextmenu", function (event) {
+                event.preventDefault();
+            });
+
+            // Prevent Back Button
+            history.pushState(null, "", location.href);
+            window.addEventListener("popstate", function () {
+                history.pushState(null, "", location.href);
+            });
+
+        }, 1000); // 1 seconds delay before blackout
+    }
+</script>
 
 
 
